@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:get/get_connect/connect.dart';
+import 'package:getx_clean_architecture/data/providers/network/api_logger.dart';
 import 'package:getx_clean_architecture/data/providers/network/api_request_representable.dart';
 
 class APIProvider {
@@ -12,6 +13,7 @@ class APIProvider {
 
   Future request(APIRequestRepresentable request) async {
     try {
+      RequestLogger.logRequest(request);
       final response = await _client.request(
         request.url,
         request.method.string,
@@ -28,6 +30,7 @@ class APIProvider {
   }
 
   dynamic _returnResponse(Response<dynamic> response) {
+    ResponseLogger.logResponse(response);
     switch (response.statusCode) {
       case 200:
         return response.body;
@@ -46,6 +49,8 @@ class APIProvider {
     }
   }
 }
+
+
 
 class AppException implements Exception {
   final code;
